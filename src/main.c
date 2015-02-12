@@ -45,7 +45,7 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 
 	const char *pam_user;
 	const char *user      = "root";
-	const char *keys_file = "/etc/pam_serial_keys";
+	const char *keys_file = "/etc/pam_usb_serial_keys";
 
 	FILE *file;
 	char line[MAX_SERIAL_LENGTH];

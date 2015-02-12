@@ -7,9 +7,9 @@ PAM Module to authenticate users with serial of USB devices
 
 Basically it's used to add authentication check with `login` (physical access). So it should be use with PAM option `required`.
 
-By default the user to use is `root` and the file which contains keys is `/etc/pam_serial_keys` but it can be configure in PAM configuration like following : `pam-usb-serial.so <user> <keys file>`
+By default the user to use is `root` and the file which contains keys is `/etc/pam_usb_serial_keys` but it can be configure in PAM configuration like following : `pam_usb_serial.so <user> <keys file>`
 
-## Limitation
+## Limitations
 This is the first version for POC (not productized), there are some limitations:
   * To use different USB device by user just create multiple entry in PAM configuration (see examples)
   * Unable to cancel USB device check (or set login timeout, e.g. pam_faildelay.so)
@@ -20,7 +20,7 @@ Below some PAM configuration examples.
 Force any user to plug valid USB device :
 ```
 auth       optional    pam_faildelay.so   delay=3000000
-auth       required    pam-usb-serial     *  /etc/pam-usb-serial.keys
+auth       required    pam_usb_serial.so  *  /etc/pam_usb_serial_keys
 ```
 
 ## Author(s)
