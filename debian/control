@@ -1,0 +1,18 @@
+Source: libpam-usb-serial
+Priority: extra
+Maintainer: Raphael Medaer <raphael.medaer@straightforward.me>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libpam0g-dev, libusb-1.0-0-dev
+Standards-Version: 3.9.3
+Section: libs
+Homepage: http://dev.straightforward.me/pam-usb-serial
+
+Package: libpam-usb-serial
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libpam0g, libusb-1.0-0
+Description: PAM Module to authenticate users with serial of USB devices
+ pam-usb-serial is a PAM module to authenticate users with serial from USB device
+ serial. Simpler than pam-usb, it doesn't need to mount file system. It allows to
+ use any device with iSerial specified and compare it with simple flat file.
+ Basically it's used to add authentication check with login (physical access). So
+ it should be use with PAM option required.

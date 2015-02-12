@@ -1,0 +1,5 @@
+libpam-usb-serial (1.0.0) unstable; urgency=low
+
+  * Initial release for POC. Do not productize it now.
+
+ -- Raphael Medaer <raphael.medaer@straightforward.me>  Thu, 12 Feb 2015 17:06:19 +0100
