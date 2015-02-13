@@ -16,11 +16,14 @@ AC_PROG_CC
 
 # Checks for libraries.
 AC_CHECK_LIB([usb-1.0], [libusb_init], [], [
-	      echo "libusb-1.0-0 is required for USB device monitoring"
-	      exit -1])
+              echo "libusb-1.0-0 is required for USB device monitoring"
+              exit -1])
 AC_CHECK_LIB([pam], [pam_get_user], [], [
-	      echo "libpam is needed to create PAM module"
-	      exit -1])
+              echo "libpam is needed to create PAM module"
+              exit -1])
+AC_CHECK_LIB([crypt], [crypt], [], [
+              echo "libcrypt is required for salt"
+              exit -1])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h syslog.h unistd.h])

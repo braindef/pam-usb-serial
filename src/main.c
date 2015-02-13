@@ -53,7 +53,7 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
     int max_retry = -1;
 
     FILE *file;
-    char line[MAX_SERIAL_LENGTH];
+    char hash[MAX_SERIAL_LENGTH];
 
     int found = 0;
 
@@ -135,23 +135,20 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
             serial_length = libusb_get_string_descriptor_ascii(device_handle, desc.iSerialNumber, serial, sizeof(serial));
             if (serial_length > 0) {    // Empty not allowed
 
-                // Calculate hash of serial
-                char *hash = crypt(serial, "rm");
-
                 // Parse keys file line by line and compare with current serial device
                 rewind(file);
-                while (fgets(line, sizeof(line), file) && (! found)) {
+                while (fgets(hash, sizeof(hash), file) && (! found)) {
                     char *nl;
-                    if ((nl = strchr(line, '\n')) != NULL) {
+                    if ((nl = strchr(hash, '\n')) != NULL) {
                         *nl = '\0';
                     }
 
-                    if (strcmp(line, "") == 0) {
+                    if (strcmp(hash, "") == 0) {
                         // by pass empty lines
                         continue;
                     }
 
-                    if (strcmp(line, hash) == 0) {
+                    if (strcmp(hash, crypt(serial, hash)) == 0) {
                         syslog(LOG_NOTICE, "Well USB device serial detected");
                         found = 1;
                     }
