@@ -47,6 +47,9 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 	const char *user      = "root";
 	const char *keys_file = "/etc/pam_usb_serial_keys";
 
+    int retry     = 0;
+    int max_retry = -1;
+
 	FILE *file;
 	char line[MAX_SERIAL_LENGTH];
 
@@ -65,6 +68,10 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 	if (argc >= 2) {
 		keys_file = argv[1];
 	}
+
+    if (argc >= 3) {
+        max_retry = atoi(argv[2]);
+    }
 
 	if (pam_get_user(pamh, &pam_user, NULL) != 0) {
 		return PAM_AUTH_ERR;
@@ -132,6 +139,11 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 						*nl = '\0';
 					}
 
+                    if (strcmp(line, "") == 0) {
+                        // by pass empty lines
+                        continue;
+                    }
+
 					if (strcmp(line, serial) == 0) {
 						syslog(LOG_NOTICE, "Well USB device serial detected");
 						found = 1;
@@ -145,6 +157,10 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 		// Free device list
 		libusb_free_device_list(list, 1);
 
+        if (max_retry == retry) {
+            break;
+        }
+        retry++;
 
 		if (! found) {
 			// Display advertise for user
@@ -167,7 +183,6 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 
 	// Return success (or not) depending found key
 	if (! found) {
-		// Should never append...
 		return PAM_AUTH_ERR;
 	}
 
