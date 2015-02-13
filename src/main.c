@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,6 +108,7 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 			libusb_device *device = list[index];
 			libusb_device_handle *device_handle;
 			struct libusb_device_descriptor desc = {0};
+            int serial_length;
 
 			rc = libusb_get_device_descriptor(device, &desc);
 
@@ -129,8 +132,12 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
 			}
 
 			unsigned char serial[MAX_SERIAL_LENGTH];
-			if (libusb_get_string_descriptor_ascii(device_handle, desc.iSerialNumber, serial, sizeof(serial)) >= 0) {
+			serial_length = libusb_get_string_descriptor_ascii(device_handle, desc.iSerialNumber, serial, sizeof(serial));
+            if (serial_length > 0) {    // Empty not allowed
 
+                // Calculate hash of serial
+                char *hash = crypt(serial, "rm");
+                
 				// Parse keys file line by line and compare with current serial device
 				rewind(file);
 				while (fgets(line, sizeof(line), file) && (! found)) {
@@ -144,7 +151,7 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[])
                         continue;
                     }
 
-					if (strcmp(line, serial) == 0) {
+					if (strcmp(line, hash) == 0) {
 						syslog(LOG_NOTICE, "Well USB device serial detected");
 						found = 1;
 					}
