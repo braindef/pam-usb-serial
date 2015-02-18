@@ -1,6 +1,7 @@
 libpam-usb-serial (1.1.0) testing; urgency=low
 
   * Compare USB device serial with hash. See crypt(3).
+  * Fix USB dev bus permission with udev rule.
 
  -- Raphael Medaer <raphael.medaer@straightforward.me>  Fri, 13 Feb 2015 13:53:13 +0100
 
