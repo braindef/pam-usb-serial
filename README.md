@@ -1,29 +1,17 @@
-# PAM USB Serial authentication
+pam\_usb provides hardware authentication for Linux using ordinary USB Flash Drives.
 
-PAM Module to authenticate users with serial of USB devices 
+It works with any application supporting PAM, such as _su_, any login manager (_GDM_, _KDM_), etc. The pam\_usb package contains:
 
-## About
-`pam-usb-serial` is a PAM module to authenticate users with serial from USB device serial. Simpler than pam-usb, it doesn't need to mount file system. It allows to use any device with iSerial specified and compare it with simple flat file.
-
-Basically it's used to add authentication check with `login` (physical access). So it should be use with PAM option `required`.
-
-By default the user to use is `root` and the file which contains keys is `/etc/pam_usb_serial_keys` but it can be configure in PAM configuration like following : `pam_usb_serial.so <user> <keys file>`
-
-## Limitations
-This is the first version for POC (not productized), there are some limitations:
-  * To use different USB device by user just create multiple entry in PAM configuration (see examples)
-  * Unable to cancel USB device check (or set login timeout, e.g. pam_faildelay.so)
-
-## Examples
-Below some PAM configuration examples.
-
-Force any user to plug valid USB device :
-```
-auth       optional    pam_faildelay.so   delay=3000000
-auth       required    pam_usb_serial.so  *  /etc/pam_usb_serial_keys
-```
-
-## Author(s)
-Raphael Medaer <raphael.medaer@straightforward.me>
-
-
+* A PAM Module
+    * Password-less authentication. Use your USB stick for authentication, don't type passwords anymore.
+    * Device auto probing.You don't need to mount the device, or even to configure the device location (_sda1_, _sdb1_, etc). pam\_usb.so will automatically locate the device using _HAL_ and access its data by itself.
+    * Two-factor authentication. Achieve greater security by requiring both the USB stick and the password to authenticate the user.
+    * Non-intrusive. pam\_usb doesn't require any modifications of the USB storage device to work (no additional partitions required).
+    * USB Serial number, model and vendor verification.
+    * Support for **One Time Pads** authentication.
+    * You can use the same device accross multiple machines.
+    * Support for all kind of removable devices (SD, MMC, etc).
+* Several tools
+    * **pamusb-agent**: trigger actions (such as locking the screen) upon device authentication and removal.
+    * **pamusb-conf**: configuration helper.
+    * **pamusb-check**: integrate pam\_usb's authentication engine within your scripts or applications.

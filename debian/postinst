@@ -1,8 +1,0 @@
-#!/bin/sh
-set -e
-
-# Restart udev
-echo "Restarting udev ..."
-/etc/init.d/udev restart
-
-exit 0

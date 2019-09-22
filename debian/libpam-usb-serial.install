@@ -1,2 +1,0 @@
-resources/pam_usb_serial_keys        /etc
-resources/82-libpam-usb-serial.rules /etc/udev/rules.d/
